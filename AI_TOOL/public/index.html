@@ -1,0 +1,705 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ShelfLife | Your Personal Book AI</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap');
+
+:root {
+  --green: #203c32;
+  --green-light: #315747;
+  --cream: #f7f5ee;
+  --white: #ffffff;
+  --gold: #c49a58;
+  --text: #28352e;
+  --muted: #888d84;
+  --border: #e8e6dd;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--cream);
+  color: var(--text);
+  height: 100vh;
+  overflow: hidden;
+}
+
+.app {
+  display: flex;
+  height: 100vh;
+}
+
+/* SIDEBAR */
+
+.sidebar {
+  width: 260px;
+  background: var(--green);
+  color: white;
+  padding: 30px 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 27px;
+  margin-bottom: 8px;
+}
+
+.logo span {
+  color: #d9b879;
+}
+
+.tagline {
+  font-size: 12px;
+  color: #c0cfc4;
+  margin-bottom: 35px;
+}
+
+.new-chat {
+  padding: 13px;
+  background: #ffffff18;
+  color: white;
+  border: 1px solid #ffffff40;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  text-align: left;
+}
+
+.new-chat:hover {
+  background: #ffffff30;
+}
+
+.side-heading {
+  margin: 35px 0 15px;
+  color: #b8c6bc;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+.side-item {
+  padding: 12px 10px;
+  font-size: 13px;
+  color: #e0e7df;
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+.side-item:hover {
+  background: #ffffff18;
+}
+
+.side-footer {
+  margin-top: auto;
+  border-top: 1px solid #ffffff30;
+  padding-top: 18px;
+  font-size: 12px;
+  color: #c0cfc4;
+  line-height: 1.7;
+}
+
+/* MAIN AREA */
+
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.topbar {
+  height: 72px;
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 35px;
+}
+
+.top-title {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.status {
+  font-size: 12px;
+  color: #4b805e;
+}
+
+.chat-area {
+  flex: 1;
+  overflow-y: auto;
+  padding: 35px 20px;
+}
+
+.chat-content {
+  max-width: 780px;
+  margin: auto;
+}
+
+/* WELCOME SCREEN */
+
+.welcome {
+  text-align: center;
+  padding: 65px 10px 35px;
+}
+
+.book-icon {
+  font-size: 45px;
+  margin-bottom: 20px;
+}
+
+.welcome h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(29px, 4vw, 42px);
+  color: var(--green);
+  margin-bottom: 13px;
+}
+
+.welcome p {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.suggestions {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  margin-top: 35px;
+  text-align: left;
+}
+
+.suggestion {
+  background: white;
+  border: 1px solid var(--border);
+  padding: 19px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.suggestion:hover {
+  border-color: var(--green-light);
+  transform: translateY(-3px);
+}
+
+.suggestion strong {
+  display: block;
+  font-size: 13px;
+  margin-bottom: 7px;
+  color: var(--green);
+}
+
+.suggestion small {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+/* CHAT MESSAGES */
+
+.message {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 25px;
+  align-items: flex-start;
+}
+
+.avatar {
+  min-width: 35px;
+  height: 35px;
+  background: var(--green);
+  color: white;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 15px;
+}
+
+.user-avatar {
+  background: #e9dfca;
+  color: var(--green);
+}
+
+.message-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.message-name {
+  font-weight: 700;
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+
+.message-text {
+  background: white;
+  border: 1px solid var(--border);
+  padding: 14px 17px;
+  border-radius: 4px 13px 13px 13px;
+  font-size: 14px;
+  line-height: 1.8;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.user-message .message-text {
+  background: #eae9df;
+  border: none;
+}
+
+/* INPUT AREA */
+
+.input-area {
+  background: var(--white);
+  border-top: 1px solid var(--border);
+  padding: 18px 25px;
+}
+
+.input-wrapper {
+  max-width: 780px;
+  margin: auto;
+}
+
+.input-box {
+  display: flex;
+  align-items: center;
+  border: 1px solid #dcded5;
+  border-radius: 13px;
+  padding: 7px 8px 7px 16px;
+  background: #fff;
+}
+
+.input-box:focus-within {
+  border-color: var(--green-light);
+}
+
+#user-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-family: inherit;
+  font-size: 14px;
+  padding: 10px 0;
+  min-width: 0;
+}
+
+#send-btn {
+  background: var(--green);
+  color: white;
+  border: none;
+  border-radius: 9px;
+  padding: 11px 19px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+#send-btn:hover {
+  background: var(--green-light);
+}
+
+#send-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.disclaimer {
+  text-align: center;
+  color: var(--muted);
+  font-size: 10px;
+  margin-top: 10px;
+}
+
+.typing {
+  color: var(--muted);
+  font-size: 13px;
+  padding: 10px 0;
+}
+
+@media(max-width: 700px) {
+  .sidebar {
+    display: none;
+  }
+
+  .topbar {
+    padding: 0 18px;
+  }
+
+  .suggestions {
+    grid-template-columns: 1fr;
+  }
+
+  .welcome {
+    padding-top: 35px;
+  }
+
+  .chat-area {
+    padding: 20px 14px;
+  }
+
+  .input-area {
+    padding: 13px;
+  }
+  .message-text h1,
+.message-text h2,
+.message-text h3 {
+  color: #203c32;
+  margin: 16px 0 9px;
+  font-family: 'Playfair Display', serif;
+}
+
+.message-text p {
+  margin-bottom: 10px;
+}
+
+.message-text ul,
+.message-text ol {
+  padding-left: 23px;
+  margin: 10px 0;
+}
+
+.message-text li {
+  margin-bottom: 7px;
+}
+
+.message-text strong {
+  color: #203c32;
+}
+
+.message-text a {
+  color: #315747;
+  text-decoration: underline;
+}
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <aside class="sidebar">
+    <div class="logo">Shelf<span>Life</span> 📚</div>
+    <div class="tagline">Your personal reading companion</div>
+
+    <button class="new-chat" onclick="newChat()">
+      + &nbsp; New Conversation
+    </button>
+
+    <div class="side-heading">Explore</div>
+
+    <div class="side-item" onclick="ask('Recommend some popular fiction books.')">📖 &nbsp; Fiction Books</div>
+    <div class="side-item" onclick="ask('Suggest motivational books for me.')">✨ &nbsp; Motivation</div>
+    <div class="side-item" onclick="ask('Recommend books for beginners.')">🌱 &nbsp; Beginner Reads</div>
+    <div class="side-item" onclick="ask('Suggest books for personal development.')">🧠 &nbsp; Self Development</div>
+    <div class="side-item" onclick="ask('Suggest adventure and mystery books.')">🔍 &nbsp; Adventure & Mystery</div>
+
+    <div class="side-footer">
+      <strong>ShelfLife AI</strong><br>
+      Discover stories. Explore knowledge.<br>
+      Find your next favourite book.
+    </div>
+  </aside>
+
+  <main class="main">
+
+    <header class="topbar">
+      <div class="top-title">Your Book Assistant</div>
+      <div class="status">● AI Assistant Online</div>
+    </header>
+
+    <section class="chat-area" id="chat-area">
+      <div class="chat-content" id="chat-box">
+
+        <div class="welcome" id="welcome">
+          <div class="book-icon">📚</div>
+
+          <h1>Find Your Next Favourite Book</h1>
+
+          <p>
+            Welcome to ShelfLife AI.<br>
+            Tell me what you love, what you want to learn,
+            or what kind of story you want to explore.
+          </p>
+
+          <div class="suggestions">
+
+            <div class="suggestion"
+              onclick="ask('I love travelling and adventure. Recommend books for me.')">
+              <strong>🌍 Adventure & Travel</strong>
+              <small>Discover exciting stories and journeys.</small>
+            </div>
+
+            <div class="suggestion"
+              onclick="ask('Recommend beginner friendly self-help books.')">
+              <strong>🌱 Personal Growth</strong>
+              <small>Find books that help you grow.</small>
+            </div>
+
+            <div class="suggestion"
+              onclick="ask('Suggest romantic novels for me.')">
+              <strong>❤️ Romance & Fiction</strong>
+              <small>Explore stories full of emotions.</small>
+            </div>
+
+            <div class="suggestion"
+              onclick="ask('Suggest books under 300 rupees.')">
+              <strong>💰 Budget Friendly Books</strong>
+              <small>Discover books within your budget.</small>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <footer class="input-area">
+      <div class="input-wrapper">
+
+        <div class="input-box">
+          <input
+            type="text"
+            id="user-input"
+            placeholder="Ask anything about books..."
+            autocomplete="off"
+          >
+
+          <button id="send-btn" onclick="sendMessage()">
+            Send ↑
+          </button>
+        </div>
+
+        <div class="disclaimer">
+          ShelfLife AI can make mistakes. Verify important information.
+        </div>
+
+      </div>
+    </footer>
+
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dompurify/dist/purify.min.js"></script>
+
+<script>
+
+const input = document.getElementById("user-input");
+const chatBox = document.getElementById("chat-box");
+const chatArea = document.getElementById("chat-area");
+const sendBtn = document.getElementById("send-btn");
+
+function addMessage(text, type) {
+
+  const message = document.createElement("div");
+  message.className = "message " +
+    (type === "user" ? "user-message" : "bot-message");
+
+  const avatar = document.createElement("div");
+  avatar.className = "avatar " +
+    (type === "user" ? "user-avatar" : "");
+
+  avatar.textContent = type === "user" ? "U" : "📚";
+
+  const body = document.createElement("div");
+  body.className = "message-body";
+
+  const name = document.createElement("div");
+  name.className = "message-name";
+  name.textContent = type === "user" ? "You" : "ShelfLife AI";
+
+  const content = document.createElement("div");
+  content.className = "message-text";
+  content.textContent = text;
+
+  body.appendChild(name);
+  body.appendChild(content);
+
+  message.appendChild(avatar);
+  message.appendChild(body);
+
+  chatBox.appendChild(message);
+
+  chatArea.scrollTop = chatArea.scrollHeight;
+
+  return message;
+}
+
+
+// Stores the previous conversation.
+let chatHistory = [];
+
+async function sendMessage() {
+
+  const message = input.value.trim();
+
+  if (!message || sendBtn.disabled) return;
+
+  const welcome = document.getElementById("welcome");
+  if (welcome) welcome.remove();
+
+  addMessage(message, "user");
+
+  input.value = "";
+  sendBtn.disabled = true;
+
+  const loading = addMessage("ShelfLife is thinking...", "bot");
+  const answerBox = loading.querySelector(".message-text");
+
+  let fullReply = "";
+
+  try {
+
+    const response = await fetch("/chat", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        message,
+        history: chatHistory
+      })
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || "Request failed.");
+    }
+
+    if (!response.body) {
+      throw new Error("Streaming is not supported by this browser.");
+    }
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+
+    let buffer = "";
+
+    while (true) {
+
+      const { value, done } = await reader.read();
+
+      if (done) break;
+
+      buffer += decoder.decode(value, { stream: true });
+
+      const events = buffer.split("\n\n");
+      buffer = events.pop();
+
+      for (const event of events) {
+
+        const line = event
+          .split("\n")
+          .find(line => line.startsWith("data: "));
+
+        if (!line) continue;
+
+        const data = JSON.parse(line.slice(6));
+
+        if (data.error) {
+          throw new Error(data.error);
+        }
+
+        if (data.text) {
+          fullReply += data.text;
+          answerBox.textContent = fullReply;
+          chatArea.scrollTop = chatArea.scrollHeight;
+        }
+      }
+    }
+
+    buffer += decoder.decode();
+
+    // Process any final event left in the buffer.
+    const remaining = buffer.trim();
+
+    if (remaining.startsWith("data: ")) {
+      const data = JSON.parse(remaining.slice(6));
+
+      if (data.error) throw new Error(data.error);
+
+      if (data.text) {
+        fullReply += data.text;
+        answerBox.textContent = fullReply;
+      }
+    }
+
+    if (!fullReply) {
+      throw new Error("The AI returned an empty response.");
+    }
+    // Convert Markdown into properly formatted HTML.
+    answerBox.innerHTML = DOMPurify.sanitize(
+      marked.parse(fullReply)
+    );
+
+    // Save the conversation for follow-up questions.
+    chatHistory.push(
+      { role: "user", text: message },
+      { role: "model", text: fullReply }
+    );
+
+    // Keep only the latest 12 messages.
+    chatHistory = chatHistory.slice(-12);
+
+  } catch (error) {
+
+    loading.remove();
+
+    addMessage(
+      error.message || "Something went wrong.",
+      "bot"
+    );
+
+    console.error(error);
+
+  } finally {
+
+    sendBtn.disabled = false;
+    input.focus();
+
+  }
+}
+
+
+function ask(question) {
+  input.value = question;
+  sendMessage();
+}
+
+function newChat() {
+  chatHistory = [];
+  chatBox.innerHTML = `
+    <div class="welcome" id="welcome">
+      <div class="book-icon">📚</div>
+      <h1>Find Your Next Favourite Book</h1>
+      <p>Welcome to ShelfLife AI.<br>
+      Tell me what you love, what you want to learn,
+      or what kind of story you want to explore.</p>
+    </div>
+  `;
+}
+
+input.addEventListener("keydown", function(event) {
+  if (event.key === "Enter") {
+    sendMessage();
+  }
+});
+
+</script>
+
+</body>
+</html>
