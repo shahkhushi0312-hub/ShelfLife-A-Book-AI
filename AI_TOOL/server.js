@@ -14,6 +14,20 @@ if (!apiKey) {
 }
 
 const ai = new GoogleGenAI({ apiKey });
+// Retry configuration
+const MAX_RETRIES = 3;
+const INITIAL_RETRY_DELAY = 1000;
+
+// Wait before retrying
+const sleep = (ms) =>
+  new Promise(resolve => setTimeout(resolve, ms));
+
+// Check whether an error is temporary
+function isRetryableError(error) {
+  const status = Number(error?.status || error?.code);
+
+  return [500, 502, 503, 504].includes(status);
+}
 
 const systemPrompt = `
 # Identity
@@ -158,7 +172,9 @@ const app = express();
 app.use(express.json({ limit: "1mb" }));
 app.use(express.static("public"));
 
+
 app.post("/chat", async (req, res) => {
+
   const message = String(req.body?.message || "").trim();
 
   if (!message) {
@@ -167,7 +183,7 @@ app.post("/chat", async (req, res) => {
     });
   }
 
-  // Keep only the latest 12 conversation messages.
+  // Keep the latest 12 conversation messages
   const history = Array.isArray(req.body?.history)
     ? req.body.history
         .filter(item =>
@@ -181,73 +197,162 @@ app.post("/chat", async (req, res) => {
         }))
     : [];
 
-  try {
+  let hasSentText = false;
+  let clientDisconnected = false;
 
-    // Generate a streaming response from Gemini.
-    const responseStream = await ai.models.generateContentStream({
-      model: MODEL_NAME,
+  res.on("close", () => {
+    clientDisconnected = true;
+  });
 
-      contents: [
-        ...history,
-        {
-          role: "user",
-          parts: [{ text: message }]
+  // Configure streaming headers
+  res.setHeader("Content-Type", "text/event-stream");
+  res.setHeader("Cache-Control", "no-cache");
+  res.setHeader("Connection", "keep-alive");
+  res.setHeader("X-Accel-Buffering", "no");
+
+  res.flushHeaders();
+
+  // Initial attempt + maximum 3 retries
+  for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+
+    if (clientDisconnected) {
+      return;
+    }
+
+    try {
+
+      console.log(
+        `Gemini request: Attempt ${attempt + 1}`
+      );
+
+      const responseStream =
+        await ai.models.generateContentStream({
+
+          model: MODEL_NAME,
+
+          contents: [
+            ...history,
+            {
+              role: "user",
+              parts: [{ text: message }]
+            }
+          ],
+
+          config: {
+            systemInstruction: systemPrompt,
+            thinkingConfig: {
+              thinkingLevel: "LOW"
+            }
+          }
+
+        });
+
+      // Stream the generated answer
+      for await (const chunk of responseStream) {
+
+        if (clientDisconnected) {
+          return;
         }
-      ],
 
-      
-      config: {
-    systemInstruction: systemPrompt,
-    thinkingConfig: {
-        thinkingLevel: "LOW"
-    }
-}
+        if (chunk.text) {
 
-    });
+          hasSentText = true;
 
-    // Send response chunks to the webpage immediately.
-    res.setHeader("Content-Type", "text/event-stream");
-    res.setHeader("Cache-Control", "no-cache");
-    res.setHeader("Connection", "keep-alive");
-    res.setHeader("X-Accel-Buffering", "no");
-
-    res.flushHeaders();
-
-    for await (const chunk of responseStream) {
-
-      if (chunk.text) {
-        res.write(
-          `data: ${JSON.stringify({ text: chunk.text })}\n\n`
-        );
+          res.write(
+            `data: ${JSON.stringify({
+              text: chunk.text
+            })}\n\n`
+          );
+        }
       }
-    }
 
-    // Tell the browser that the response is complete.
-    res.write(`data: ${JSON.stringify({ done: true })}\n\n`);
-    res.end();
+      // Handle an empty response
+      if (!hasSentText) {
+        const emptyError = new Error(
+          "Gemini returned an empty response."
+        );
 
-  } catch (error) {
+        emptyError.status = 503;
+        throw emptyError;
+      }
 
-    console.error("GEMINI ERROR DETAILS:", error);
-    console.error("Gemini status:", error.status);
-    console.error("Gemini message:", error.message);
-    console.error("Full Gemini error:", error);
-
-    if (res.headersSent) {
+      // Response completed successfully
       res.write(
         `data: ${JSON.stringify({
-          error: "Sorry, I couldn't complete that response. Please try again."
+          done: true
         })}\n\n`
       );
-      res.end();
 
-    } else {
-      res.status(500).json({
-        error: "AI request failed. Please try again."
-      });
+      console.log("Gemini response completed.");
+
+      res.end();
+      return;
+
+    } catch (error) {
+
+      console.error(
+        `Gemini attempt ${attempt + 1} failed:`,
+        error.status || error.code || "Unknown error"
+      );
+
+      if (clientDisconnected) {
+        return;
+      }
+
+      // Preserve any partially generated response.
+      // Do not restart streaming and duplicate text.
+      if (hasSentText) {
+
+        res.write(
+          `data: ${JSON.stringify({
+            text: "\n\n*The response was interrupted. Please ask me to continue.*"
+          })}\n\n`
+        );
+
+        res.write(
+          `data: ${JSON.stringify({
+            done: true
+          })}\n\n`
+        );
+
+        res.end();
+        return;
+      }
+
+      // Retry temporary server errors
+      if (
+        isRetryableError(error) &&
+        attempt < MAX_RETRIES
+      ) {
+
+        const delay =
+          INITIAL_RETRY_DELAY * Math.pow(2, attempt);
+
+        console.log(
+          `Gemini temporarily unavailable. Retrying in ${delay}ms...`
+        );
+
+        await sleep(delay);
+        continue;
+      }
+
+      // All retries failed or error is not retryable
+      const friendlyMessage = isRetryableError(error)
+        ? "ShelfLife AI is experiencing high demand right now. Please try again in a moment."
+        : "Sorry, I couldn't process your request. Please try again.";
+
+      res.write(
+        `data: ${JSON.stringify({
+          error: friendlyMessage
+        })}\n\n`
+      );
+
+      res.end();
+      return;
     }
   }
 });
+
 
 app.listen(PORT, "0.0.0.0", () => {
     console.log(`ShelfLife AI running on port ${PORT}`);
