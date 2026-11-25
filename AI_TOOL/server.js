@@ -292,7 +292,15 @@ app.post("/chat", async (req, res) => {
 
       console.error(
         `Gemini attempt ${attempt + 1} failed:`,
-        error.status || error.code || "Unknown error"
+        error.status || error.code || "Unknown error");
+        console.error("========== GEMINI ERROR DETAILS ==========");
+        console.error("Full Error:", error);
+        console.error("Error Name:", error?.name);
+        console.error("Error Message:", error?.message);
+        console.error("Error Status:", error?.status);
+        console.error("Error Code:", error?.code);
+        console.error("Error Cause:", error?.cause);
+        console.error("=========================================="
       );
 
       if (clientDisconnected) {

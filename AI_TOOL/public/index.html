@@ -261,6 +261,56 @@ body {
   border: none;
 }
 
+/* MARKDOWN FORMATTING */
+
+.message-text h1,
+.message-text h2,
+.message-text h3 {
+  color: #203c32;
+  margin: 16px 0 9px;
+  font-family: 'Playfair Display', serif;
+}
+
+.message-text p {
+  margin-bottom: 10px;
+}
+
+.message-text p:last-child {
+  margin-bottom: 0;
+}
+
+.message-text ul,
+.message-text ol {
+  padding-left: 23px;
+  margin: 10px 0;
+}
+
+.message-text li {
+  margin-bottom: 7px;
+}
+
+.message-text strong {
+  color: #203c32;
+}
+
+.message-text a {
+  color: #315747;
+  text-decoration: underline;
+}
+
+.message-text pre {
+  overflow-x: auto;
+  white-space: pre-wrap;
+}
+
+.response-warning {
+  margin-top: 15px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+  color: #a16b28;
+  font-size: 12px;
+}
+
 /* INPUT AREA */
 
 .input-area {
@@ -329,7 +379,10 @@ body {
   padding: 10px 0;
 }
 
+/* RESPONSIVE DESIGN */
+
 @media(max-width: 700px) {
+
   .sidebar {
     display: none;
   }
@@ -353,37 +406,8 @@ body {
   .input-area {
     padding: 13px;
   }
-  .message-text h1,
-.message-text h2,
-.message-text h3 {
-  color: #203c32;
-  margin: 16px 0 9px;
-  font-family: 'Playfair Display', serif;
 }
 
-.message-text p {
-  margin-bottom: 10px;
-}
-
-.message-text ul,
-.message-text ol {
-  padding-left: 23px;
-  margin: 10px 0;
-}
-
-.message-text li {
-  margin-bottom: 7px;
-}
-
-.message-text strong {
-  color: #203c32;
-}
-
-.message-text a {
-  color: #315747;
-  text-decoration: underline;
-}
-}
 </style>
 </head>
 
@@ -392,8 +416,14 @@ body {
 <div class="app">
 
   <aside class="sidebar">
-    <div class="logo">Shelf<span>Life</span> 📚</div>
-    <div class="tagline">Your personal reading companion</div>
+
+    <div class="logo">
+      Shelf<span>Life</span> 📚
+    </div>
+
+    <div class="tagline">
+      Your personal reading companion
+    </div>
 
     <button class="new-chat" onclick="newChat()">
       + &nbsp; New Conversation
@@ -401,30 +431,59 @@ body {
 
     <div class="side-heading">Explore</div>
 
-    <div class="side-item" onclick="ask('Recommend some popular fiction books.')">📖 &nbsp; Fiction Books</div>
-    <div class="side-item" onclick="ask('Suggest motivational books for me.')">✨ &nbsp; Motivation</div>
-    <div class="side-item" onclick="ask('Recommend books for beginners.')">🌱 &nbsp; Beginner Reads</div>
-    <div class="side-item" onclick="ask('Suggest books for personal development.')">🧠 &nbsp; Self Development</div>
-    <div class="side-item" onclick="ask('Suggest adventure and mystery books.')">🔍 &nbsp; Adventure & Mystery</div>
+    <div class="side-item"
+      onclick="ask('Recommend some popular fiction books.')">
+      📖 &nbsp; Fiction Books
+    </div>
+
+    <div class="side-item"
+      onclick="ask('Suggest motivational books for me.')">
+      ✨ &nbsp; Motivation
+    </div>
+
+    <div class="side-item"
+      onclick="ask('Recommend books for beginners.')">
+      🌱 &nbsp; Beginner Reads
+    </div>
+
+    <div class="side-item"
+      onclick="ask('Suggest books for personal development.')">
+      🧠 &nbsp; Self Development
+    </div>
+
+    <div class="side-item"
+      onclick="ask('Suggest adventure and mystery books.')">
+      🔍 &nbsp; Adventure & Mystery
+    </div>
 
     <div class="side-footer">
       <strong>ShelfLife AI</strong><br>
       Discover stories. Explore knowledge.<br>
       Find your next favourite book.
     </div>
+
   </aside>
 
   <main class="main">
 
     <header class="topbar">
-      <div class="top-title">Your Book Assistant</div>
-      <div class="status">● AI Assistant Online</div>
+
+      <div class="top-title">
+        Your Book Assistant
+      </div>
+
+      <div class="status" id="ai-status">
+        ● AI Assistant Online
+      </div>
+
     </header>
 
     <section class="chat-area" id="chat-area">
+
       <div class="chat-content" id="chat-box">
 
         <div class="welcome" id="welcome">
+
           <div class="book-icon">📚</div>
 
           <h1>Find Your Next Favourite Book</h1>
@@ -439,38 +498,62 @@ body {
 
             <div class="suggestion"
               onclick="ask('I love travelling and adventure. Recommend books for me.')">
+
               <strong>🌍 Adventure & Travel</strong>
-              <small>Discover exciting stories and journeys.</small>
+
+              <small>
+                Discover exciting stories and journeys.
+              </small>
+
             </div>
 
             <div class="suggestion"
               onclick="ask('Recommend beginner friendly self-help books.')">
+
               <strong>🌱 Personal Growth</strong>
-              <small>Find books that help you grow.</small>
+
+              <small>
+                Find books that help you grow.
+              </small>
+
             </div>
 
             <div class="suggestion"
               onclick="ask('Suggest romantic novels for me.')">
+
               <strong>❤️ Romance & Fiction</strong>
-              <small>Explore stories full of emotions.</small>
+
+              <small>
+                Explore stories full of emotions.
+              </small>
+
             </div>
 
             <div class="suggestion"
               onclick="ask('Suggest books under 300 rupees.')">
+
               <strong>💰 Budget Friendly Books</strong>
-              <small>Discover books within your budget.</small>
+
+              <small>
+                Discover books within your budget.
+              </small>
+
             </div>
 
           </div>
+
         </div>
 
       </div>
+
     </section>
 
     <footer class="input-area">
+
       <div class="input-wrapper">
 
         <div class="input-box">
+
           <input
             type="text"
             id="user-input"
@@ -481,49 +564,83 @@ body {
           <button id="send-btn" onclick="sendMessage()">
             Send ↑
           </button>
+
         </div>
 
         <div class="disclaimer">
-          ShelfLife AI can make mistakes. Verify important information.
+          ShelfLife AI can make mistakes.
+          Verify important information.
         </div>
 
       </div>
+
     </footer>
 
   </main>
+
 </div>
 
+<!-- MARKDOWN LIBRARIES -->
+
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
 <script src="https://cdn.jsdelivr.net/npm/dompurify/dist/purify.min.js"></script>
 
 <script>
+
+// GET HTML ELEMENTS
 
 const input = document.getElementById("user-input");
 const chatBox = document.getElementById("chat-box");
 const chatArea = document.getElementById("chat-area");
 const sendBtn = document.getElementById("send-btn");
+const aiStatus = document.getElementById("ai-status");
+
+// SAVE ORIGINAL WELCOME SCREEN
+
+const welcomeScreen = chatBox.innerHTML;
+
+// CONVERSATION MEMORY
+
+let chatHistory = [];
+
+// SCROLL TO LATEST MESSAGE
+
+function scrollToBottom() {
+  chatArea.scrollTop = chatArea.scrollHeight;
+}
+
+// ADD CHAT MESSAGE
 
 function addMessage(text, type) {
 
   const message = document.createElement("div");
+
   message.className = "message " +
     (type === "user" ? "user-message" : "bot-message");
 
   const avatar = document.createElement("div");
+
   avatar.className = "avatar " +
     (type === "user" ? "user-avatar" : "");
 
   avatar.textContent = type === "user" ? "U" : "📚";
 
   const body = document.createElement("div");
+
   body.className = "message-body";
 
   const name = document.createElement("div");
+
   name.className = "message-name";
-  name.textContent = type === "user" ? "You" : "ShelfLife AI";
+
+  name.textContent =
+    type === "user" ? "You" : "ShelfLife AI";
 
   const content = document.createElement("div");
+
   content.className = "message-text";
+
   content.textContent = text;
 
   body.appendChild(name);
@@ -534,169 +651,384 @@ function addMessage(text, type) {
 
   chatBox.appendChild(message);
 
-  chatArea.scrollTop = chatArea.scrollHeight;
+  scrollToBottom();
 
   return message;
 }
 
+// SAFE MARKDOWN FORMATTING
 
-// Stores the previous conversation.
-let chatHistory = [];
+function renderMarkdown(element, text) {
+
+  if (
+    typeof marked !== "undefined" &&
+    typeof DOMPurify !== "undefined"
+  ) {
+
+    element.innerHTML = DOMPurify.sanitize(
+      marked.parse(text)
+    );
+
+  } else {
+
+    element.textContent = text;
+
+  }
+}
+
+// DISPLAY INTERRUPTION WARNING
+
+function showWarning(element, text) {
+
+  const warning = document.createElement("div");
+
+  warning.className = "response-warning";
+
+  warning.textContent = text;
+
+  element.appendChild(warning);
+}
+
+// SEND MESSAGE TO BACKEND
 
 async function sendMessage() {
 
   const message = input.value.trim();
 
-  if (!message || sendBtn.disabled) return;
+  if (!message || sendBtn.disabled) {
+    return;
+  }
 
   const welcome = document.getElementById("welcome");
-  if (welcome) welcome.remove();
+
+  if (welcome) {
+    welcome.remove();
+  }
 
   addMessage(message, "user");
 
   input.value = "";
+
   sendBtn.disabled = true;
 
-  const loading = addMessage("ShelfLife is thinking...", "bot");
+  sendBtn.textContent = "Wait...";
+
+  aiStatus.textContent = "● AI Assistant Thinking";
+
+  const loading = addMessage(
+    "ShelfLife is thinking...",
+    "bot"
+  );
+
   const answerBox = loading.querySelector(".message-text");
 
   let fullReply = "";
 
+  let streamCompleted = false;
+
+  let reader = null;
+
+  // PROCESS INDIVIDUAL STREAMING EVENTS
+
+  function processEvent(event) {
+
+    const line = event
+      .split(/\r?\n/)
+      .find(line => line.startsWith("data:"));
+
+    if (!line) {
+      return;
+    }
+
+    const data = JSON.parse(
+      line.slice(5).trim()
+    );
+
+    if (data.error) {
+
+      throw new Error(data.error);
+
+    }
+
+    if (typeof data.text === "string") {
+
+      fullReply += data.text;
+
+      answerBox.textContent = fullReply;
+
+      scrollToBottom();
+
+    }
+
+    if (data.done === true) {
+
+      streamCompleted = true;
+
+    }
+  }
+
   try {
 
+    // SEND REQUEST TO SERVER
+
     const response = await fetch("/chat", {
+
       method: "POST",
+
       headers: {
         "Content-Type": "application/json"
       },
+
       body: JSON.stringify({
         message,
         history: chatHistory
       })
+
     });
 
+    // CHECK HTTP ERRORS
+
     if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error || "Request failed.");
+
+      let errorMessage =
+        "AI request failed. Please try again.";
+
+      try {
+
+        const errorData = await response.json();
+
+        errorMessage =
+          errorData.error || errorMessage;
+
+      } catch {
+
+        // Keep the default error message.
+
+      }
+
+      throw new Error(errorMessage);
+
     }
+
+    // CHECK STREAMING SUPPORT
 
     if (!response.body) {
-      throw new Error("Streaming is not supported by this browser.");
+
+      throw new Error(
+        "Streaming is not supported by this browser."
+      );
+
     }
 
-    const reader = response.body.getReader();
+    reader = response.body.getReader();
+
     const decoder = new TextDecoder();
 
     let buffer = "";
+
+    // READ STREAMING RESPONSE
 
     while (true) {
 
       const { value, done } = await reader.read();
 
-      if (done) break;
+      if (done) {
 
-      buffer += decoder.decode(value, { stream: true });
+        break;
 
-      const events = buffer.split("\n\n");
-      buffer = events.pop();
+      }
+
+      buffer += decoder.decode(
+        value,
+        { stream: true }
+      );
+
+      const events = buffer.split(/\r?\n\r?\n/);
+
+      buffer = events.pop() || "";
 
       for (const event of events) {
 
-        const line = event
-          .split("\n")
-          .find(line => line.startsWith("data: "));
+        processEvent(event);
 
-        if (!line) continue;
-
-        const data = JSON.parse(line.slice(6));
-
-        if (data.error) {
-          throw new Error(data.error);
-        }
-
-        if (data.text) {
-          fullReply += data.text;
-          answerBox.textContent = fullReply;
-          chatArea.scrollTop = chatArea.scrollHeight;
-        }
       }
     }
+
+    // PROCESS REMAINING DATA
 
     buffer += decoder.decode();
 
-    // Process any final event left in the buffer.
     const remaining = buffer.trim();
 
-    if (remaining.startsWith("data: ")) {
-      const data = JSON.parse(remaining.slice(6));
+    if (remaining) {
 
-      if (data.error) throw new Error(data.error);
+      const events = remaining.split(/\r?\n\r?\n/);
 
-      if (data.text) {
-        fullReply += data.text;
-        answerBox.textContent = fullReply;
+      for (const event of events) {
+
+        processEvent(event);
+
       }
     }
 
-    if (!fullReply) {
-      throw new Error("The AI returned an empty response.");
+    // CHECK WHETHER STREAM COMPLETED
+
+    if (!streamCompleted) {
+
+      throw new Error(
+        "The AI response was interrupted."
+      );
+
     }
-    // Convert Markdown into properly formatted HTML.
-    answerBox.innerHTML = DOMPurify.sanitize(
-      marked.parse(fullReply)
-    );
 
-    // Save the conversation for follow-up questions.
+    // CHECK EMPTY RESPONSE
+
+    if (!fullReply.trim()) {
+
+      throw new Error(
+        "The AI returned an empty response."
+      );
+
+    }
+
+    // FORMAT COMPLETE RESPONSE
+
+    renderMarkdown(answerBox, fullReply);
+
+    // SAVE SUCCESSFUL CONVERSATION
+
     chatHistory.push(
-      { role: "user", text: message },
-      { role: "model", text: fullReply }
+
+      {
+        role: "user",
+        text: message
+      },
+
+      {
+        role: "model",
+        text: fullReply
+      }
+
     );
 
-    // Keep only the latest 12 messages.
+    // KEEP LATEST 12 MESSAGES
+
     chatHistory = chatHistory.slice(-12);
+
+    scrollToBottom();
 
   } catch (error) {
 
-    loading.remove();
+    console.error("ShelfLife AI Error:", error);
 
-    addMessage(
-      error.message || "Something went wrong.",
-      "bot"
-    );
+    // PRESERVE PARTIALLY GENERATED ANSWERS
 
-    console.error(error);
+    if (fullReply.trim()) {
+
+      renderMarkdown(answerBox, fullReply);
+
+      showWarning(
+        answerBox,
+        "⚠️ The response was interrupted. Please try again."
+      );
+
+    } else {
+
+      // SHOW FRIENDLY ERROR WITHOUT REMOVING MESSAGE
+
+      answerBox.textContent =
+        error.message ||
+        "ShelfLife AI is temporarily unavailable. Please try again.";
+
+    }
+
+    scrollToBottom();
 
   } finally {
 
+    // RELEASE STREAM READER
+
+    if (reader) {
+
+      try {
+
+        if (!streamCompleted) {
+          await reader.cancel();
+        }
+
+      } catch {
+
+        // Ignore stream cleanup errors.
+
+      } finally {
+
+        reader.releaseLock();
+
+      }
+
+    }
+
+    // ENABLE INPUT AGAIN
+
     sendBtn.disabled = false;
+
+    sendBtn.textContent = "Send ↑";
+
+    aiStatus.textContent = "● AI Assistant Online";
+
     input.focus();
 
   }
 }
 
+// SEND PREDEFINED QUESTION
 
 function ask(question) {
+
+  if (sendBtn.disabled) {
+    return;
+  }
+
   input.value = question;
+
   sendMessage();
+
 }
+
+// START NEW CONVERSATION
 
 function newChat() {
+
+  // Prevent resetting while an answer is generating.
+
+  if (sendBtn.disabled) {
+    return;
+  }
+
   chatHistory = [];
-  chatBox.innerHTML = `
-    <div class="welcome" id="welcome">
-      <div class="book-icon">📚</div>
-      <h1>Find Your Next Favourite Book</h1>
-      <p>Welcome to ShelfLife AI.<br>
-      Tell me what you love, what you want to learn,
-      or what kind of story you want to explore.</p>
-    </div>
-  `;
+
+  chatBox.innerHTML = welcomeScreen;
+
+  input.value = "";
+
+  chatArea.scrollTop = 0;
+
+  input.focus();
+
 }
 
+// SEND MESSAGE USING ENTER KEY
+
 input.addEventListener("keydown", function(event) {
+
   if (event.key === "Enter") {
+
+    event.preventDefault();
+
     sendMessage();
+
   }
+
 });
 
 </script>
